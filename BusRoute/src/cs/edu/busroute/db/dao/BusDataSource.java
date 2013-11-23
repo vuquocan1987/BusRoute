@@ -15,6 +15,9 @@ import cs.edu.busroute.model.BusStation;
  * 
  */
 public class BusDataSource {
+	private static final int COL_INDEX_3 = 3;
+	private static final int COL_INDEX_2 = 2;
+	private static final int COL_INDEX_1 = 1;
 	private SQLiteDatabase database;
 	private final BusInfoHelper dbHelper;
 
@@ -31,6 +34,12 @@ public class BusDataSource {
 		dbHelper.close();
 	}
 
+	/**
+	 * Get the stations for given bus id
+	 * 
+	 * @param id
+	 * @return list of bus station
+	 */
 	public List<BusStation> getBusStationById(long id) {
 		List<BusStation> busStations = new ArrayList<BusStation>();
 		String query = "Select * from " + BusInfoHelper.TABLE_NAME
@@ -41,9 +50,9 @@ public class BusDataSource {
 		while (!cursor.isAfterLast()) {
 			BusStation bs = new BusStation();
 			bs.setId(id);
-			bs.setLatitude(cursor.getFloat(1));
-			bs.setLongitude(cursor.getFloat(2));
-			bs.setDescription(cursor.getString(3));
+			bs.setLatitude(cursor.getFloat(COL_INDEX_1));
+			bs.setLongitude(cursor.getFloat(COL_INDEX_2));
+			bs.setDescription(cursor.getString(COL_INDEX_3));
 			busStations.add(bs);
 		}
 		return busStations;
