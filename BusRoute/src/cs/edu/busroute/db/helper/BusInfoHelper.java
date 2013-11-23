@@ -4,7 +4,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Locale;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -23,6 +22,16 @@ public class BusInfoHelper extends SQLiteOpenHelper {
 	private static final String DATABASE_PATH = "/data/data/cs.edu.busroute/databases/";
 	private static final String DATABASE_NAME = "busdata.db";
 	private static final int SCHEMA_VERSION = 1;
+
+	public static final String TABLE_NAME = "BusStation";
+
+	public static final String COLUMN_ID = "id";
+
+	public static final String COLUMN_LATITUDE = "latitude";
+
+	public static final String COLUMN_LONGITUDE = "longitude";
+
+	public static final String COLUMN_DESC = "description";
 
 	public SQLiteDatabase dbSqlite;
 
@@ -48,7 +57,7 @@ public class BusInfoHelper extends SQLiteOpenHelper {
 	public void createDatabase() {
 		boolean dbExist = isDbExists();
 		if (!dbExist) {
-			this.getReadableDatabase();
+			// this.getReadableDatabase();
 			copyDBFromResource();
 		}
 	}
@@ -60,9 +69,9 @@ public class BusInfoHelper extends SQLiteOpenHelper {
 			String databasePath = DATABASE_PATH + DATABASE_NAME;
 			db = SQLiteDatabase.openDatabase(databasePath, null,
 					SQLiteDatabase.OPEN_READONLY);
-			db.setLocale(Locale.getDefault());
+			// db.setLocale(Locale.getDefault());
 			// db.setLockingEnabled(true);
-			db.setVersion(1);
+			// db.setVersion(1);
 		} catch (SQLiteException e) {
 			Log.e("SqlHelper", "database not found");
 		}

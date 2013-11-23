@@ -1,22 +1,27 @@
 package cs.edu.busroute;
 
+import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
-import cs.edu.busroute.db.helper.BusInfoHelper;
+import cs.edu.busroute.db.dao.BusDataSource;
+import cs.edu.busroute.model.BusStation;
 
 public class MainActivity extends Activity {
 
-	private BusInfoHelper busInfoHelper = null;
+	private BusDataSource dataSource;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		// create our database, should be use
-		busInfoHelper = new BusInfoHelper(this);
-		busInfoHelper.createDatabase();
+		dataSource = new BusDataSource(this);
+		dataSource.open();
+
+		List<BusStation> busStations = dataSource.getBusStationById(1);
+		System.out.print(busStations);
 	}
 
 	@Override
