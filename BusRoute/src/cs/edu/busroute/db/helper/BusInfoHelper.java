@@ -55,7 +55,7 @@ public class BusInfoHelper extends SQLiteOpenHelper {
 	public void createDatabase() {
 		boolean dbExist = isDbExists();
 		if (!dbExist) {
-			// this.getReadableDatabase();
+			this.getReadableDatabase();
 			copyDBFromResource();
 		}
 	}
