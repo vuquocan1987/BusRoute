@@ -5,7 +5,8 @@ import java.util.List;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
-import cs.edu.busroute.db.dao.BusDataSource;
+import cs.edu.busroute.db.service.BusDataSource;
+import cs.edu.busroute.db.service.impl.BusDataSourceImpl;
 import cs.edu.busroute.model.BusStation;
 
 public class MainActivity extends Activity {
@@ -17,7 +18,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		// create our database, should be use
-		dataSource = new BusDataSource(this);
+		dataSource = new BusDataSourceImpl(this);
 		dataSource.open();
 
 		List<BusStation> busStations = dataSource.getBusStationById(1);

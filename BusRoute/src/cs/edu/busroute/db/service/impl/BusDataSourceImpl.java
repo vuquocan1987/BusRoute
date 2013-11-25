@@ -1,4 +1,4 @@
-package cs.edu.busroute.db.dao;
+package cs.edu.busroute.db.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,13 +8,14 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import cs.edu.busroute.db.helper.BusInfoHelper;
+import cs.edu.busroute.db.service.BusDataSource;
 import cs.edu.busroute.model.BusStation;
 
 /**
  * @author HoangNguyen
  * 
  */
-public class BusDataSource {
+public class BusDataSourceImpl implements BusDataSource {
 	private static final int COL_INDEX_0 = 0;
 	private static final int COL_INDEX_3 = 3;
 	private static final int COL_INDEX_2 = 2;
@@ -22,7 +23,7 @@ public class BusDataSource {
 	private SQLiteDatabase database;
 	private final BusInfoHelper dbHelper;
 
-	public BusDataSource(Context context) {
+	public BusDataSourceImpl(Context context) {
 		dbHelper = new BusInfoHelper(context);
 	}
 
@@ -41,6 +42,7 @@ public class BusDataSource {
 	 * @param id
 	 * @return list of bus station
 	 */
+	@Override
 	public List<BusStation> getBusStationById(long id) {
 		List<BusStation> busStations = new ArrayList<BusStation>();
 		String query = "Select * from " + BusInfoHelper.TABLE_NAME
@@ -68,6 +70,7 @@ public class BusDataSource {
 	 * 
 	 * @return list all of bus station
 	 */
+	@Override
 	public List<BusStation> getAllBusStation() {
 		List<BusStation> busStations = new ArrayList<BusStation>();
 		String query = "Select distinct * from " + BusInfoHelper.TABLE_NAME
@@ -83,6 +86,7 @@ public class BusDataSource {
 	 * @param longtitude
 	 * @return the list of busId that go through this station
 	 */
+	@Override
 	public List<Long> getBusIdListForStation(double latitude, double longtitude) {
 		List<Long> ids = new ArrayList<Long>();
 		String query = "Select distinct id from " + BusInfoHelper.TABLE_NAME
