@@ -5,6 +5,7 @@ import java.util.List;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
+import cs.edu.busroute.db.helper.TableTypeEnum;
 import cs.edu.busroute.db.service.BusDataSource;
 import cs.edu.busroute.db.service.impl.BusDataSourceImpl;
 import cs.edu.busroute.model.BusStation;
@@ -21,7 +22,8 @@ public class MainActivity extends Activity {
 		dataSource = new BusDataSourceImpl(this);
 		dataSource.open();
 
-		List<BusStation> busStations = dataSource.getBusStationById(1);
+		List<BusStation> busStations = dataSource.getBusStationById(1,
+				TableTypeEnum.FORWARD);
 		System.out.print(busStations);
 	}
 

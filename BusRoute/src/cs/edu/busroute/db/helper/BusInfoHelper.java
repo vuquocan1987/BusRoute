@@ -23,8 +23,6 @@ public class BusInfoHelper extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "busdata.db";
 	private static final int SCHEMA_VERSION = 1;
 
-	public static final String TABLE_NAME = "BusStation";
-
 	public static final String COLUMN_ID = "id";
 
 	public static final String COLUMN_LATITUDE = "latitude";

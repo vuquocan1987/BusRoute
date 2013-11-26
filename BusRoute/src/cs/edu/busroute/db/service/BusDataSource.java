@@ -3,6 +3,10 @@ package cs.edu.busroute.db.service;
 import java.util.List;
 
 import android.database.SQLException;
+
+import com.google.android.gms.maps.model.LatLng;
+
+import cs.edu.busroute.db.helper.TableTypeEnum;
 import cs.edu.busroute.model.BusStation;
 
 public interface BusDataSource {
@@ -10,9 +14,10 @@ public interface BusDataSource {
 
 	public void close();
 
-	public List<BusStation> getBusStationById(long id);
+	public List<BusStation> getBusStationById(long id, TableTypeEnum tableType);
 
-	public List<BusStation> getAllBusStation();
+	public List<BusStation> getAllBusStation(TableTypeEnum tableType);
 
-	public List<Long> getBusIdListForStation(double latitude, double longtitude);
+	public List<Long> getBusIdListForStation(LatLng stationGPS,
+			TableTypeEnum tableType);
 }
