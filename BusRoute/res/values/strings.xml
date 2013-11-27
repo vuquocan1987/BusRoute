@@ -6,6 +6,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="main_title">Find the path</string>
      <string name="map_title">Locate the position</string>
+      <string name="busRoute_title">Detail Route</string>
     <string name="error_endPoint">Please input endpoint</string>
 	<string name="error_startPoint">Please input startpoint</string>
 </resources>

@@ -40,6 +40,10 @@
          <activity android:name=".MapActivity"
              android:label="@string/map_title">
         </activity>
+        
+         <activity android:name=".BusRouteActivity"
+             android:label="@string/busRoute_title">
+        </activity>
          
    
         <meta-data android:name="com.google.android.gms.version"

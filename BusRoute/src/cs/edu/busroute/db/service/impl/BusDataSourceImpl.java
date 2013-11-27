@@ -1,7 +1,9 @@
 package cs.edu.busroute.db.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -84,6 +86,32 @@ public class BusDataSourceImpl implements BusDataSource {
 		Cursor cursor = database.rawQuery(query, null);
 		cursorToBusStation(busStations, cursor);
 		return busStations;
+	}
+
+	@Override
+	public Map<String, LatLng> getAllStation() {
+		Map<String, LatLng> map = new HashMap<String, LatLng>();
+
+		getAllStationInternal(map, TableTypeEnum.FORWARD);
+		getAllStationInternal(map, TableTypeEnum.BACKWARD);
+
+		return map;
+	}
+
+	private void getAllStationInternal(Map<String, LatLng> map,
+			TableTypeEnum tableType) {
+		String query = "Select distinct * from " + tableType.getTableName()
+				+ " group by latitude, longitude ";
+		Cursor cursor = database.rawQuery(query, null);
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			String description = cursor.getString(COL_INDEX_3);
+			if (!map.values().contains(description)) {
+				map.put(description, new LatLng(cursor.getFloat(COL_INDEX_1),
+						cursor.getFloat(COL_INDEX_2)));
+			}
+			cursor.moveToNext();
+		}
 	}
 
 	/**

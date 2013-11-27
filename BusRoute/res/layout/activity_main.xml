@@ -16,14 +16,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <EditText
-            android:id="@+id/txt_startpoint"
+        <AutoCompleteTextView
+            android:id="@+id/txt_startPoint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="start point"
-            android:inputType="textPostalAddress" />
+            android:hint="start point" >
+
+            <requestFocus />
+        </AutoCompleteTextView>
 
         <Button
             android:id="@+id/btn_startpoint"
@@ -45,14 +47,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <EditText
-            android:id="@+id/txt_endpoint"
+        <AutoCompleteTextView
+            android:id="@+id/txt_endPoint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="end point"
-            android:inputType="textPostalAddress" />
+            android:hint="end point" />
 
         <Button
             android:id="@+id/btn_endpoint"
@@ -96,5 +97,7 @@
             android:layout_height="wrap_content"
             android:onClick="onClick"
             android:text="Find bus route" />
+
+    
 
 </LinearLayout>

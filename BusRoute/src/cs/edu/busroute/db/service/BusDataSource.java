@@ -1,6 +1,7 @@
 package cs.edu.busroute.db.service;
 
 import java.util.List;
+import java.util.Map;
 
 import android.database.SQLException;
 
@@ -20,4 +21,6 @@ public interface BusDataSource {
 
 	public List<Long> getBusIdListForStation(LatLng stationGPS,
 			TableTypeEnum tableType);
+
+	public Map<String, LatLng> getAllStation();
 }

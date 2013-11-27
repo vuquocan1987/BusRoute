@@ -8,6 +8,10 @@ public abstract class AbstractDataSourceActivity extends Activity {
 	private BusDataSource dataSource;
 
 	public BusDataSource getDataSource() {
-		return dataSource != null ? dataSource : new BusDataSourceImpl(this);
+		if (dataSource == null) {
+			dataSource = new BusDataSourceImpl(this);
+		}
+		dataSource.open();
+		return dataSource;
 	}
 }

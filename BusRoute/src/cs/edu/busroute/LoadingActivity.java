@@ -12,7 +12,7 @@ public class LoadingActivity extends AbstractDataSourceActivity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_loading);
-		getDataSource().open(); // copy database at the first run
+		getDataSource(); // copy database at the first run
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -22,5 +22,7 @@ public class LoadingActivity extends AbstractDataSourceActivity {
 				finish();
 			}
 		}, 3000);
+
 	}
+
 }
