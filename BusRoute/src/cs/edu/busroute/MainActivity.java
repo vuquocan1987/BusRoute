@@ -1,30 +1,51 @@
 package cs.edu.busroute;
 
-import java.util.List;
-
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
-import cs.edu.busroute.db.helper.TableTypeEnum;
-import cs.edu.busroute.db.service.BusDataSource;
-import cs.edu.busroute.db.service.impl.BusDataSourceImpl;
-import cs.edu.busroute.model.BusStation;
+import android.view.View;
+import android.widget.EditText;
 
 public class MainActivity extends Activity {
 
-	private BusDataSource dataSource;
+	private EditText txt_startPoint;
+	private EditText txt_endPoint;
+	private String startPoint, endPoint;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		// create our database, should be use
-		dataSource = new BusDataSourceImpl(this);
-		dataSource.open();
 
-		List<BusStation> busStations = dataSource.getBusStationById(1,
-				TableTypeEnum.FORWARD);
-		System.out.print(busStations);
+		txt_startPoint = (EditText) findViewById(R.id.txt_startpoint);
+		txt_endPoint = (EditText) findViewById(R.id.txt_endpoint);
+
+	}
+
+	public void onClick(View view) {
+		txt_startPoint.setError(null);
+		txt_endPoint.setError(null);
+		startPoint = txt_startPoint.getText().toString();
+		endPoint = txt_endPoint.getText().toString();
+		boolean cancel = false;
+
+		if (TextUtils.isEmpty(startPoint)) {
+			txt_startPoint.setError(getString(R.string.error_startPoint));
+			cancel = true;
+		}
+
+		if (TextUtils.isEmpty(endPoint)) {
+			txt_endPoint.setError(getString(R.string.error_endPoint));
+			cancel = true;
+		}
+	}
+
+	public void openMap(View view) {
+		final Intent mapIntent = new Intent(MainActivity.this,
+				MapActivity.class);
+		startActivity(mapIntent);
 	}
 
 	@Override

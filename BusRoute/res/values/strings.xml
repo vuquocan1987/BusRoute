@@ -4,5 +4,8 @@
     <string name="app_name">BusRoute</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-
+    <string name="main_title">Find the path</string>
+     <string name="map_title">Locate the position</string>
+    <string name="error_endPoint">Please input endpoint</string>
+	<string name="error_startPoint">Please input startpoint</string>
 </resources>
