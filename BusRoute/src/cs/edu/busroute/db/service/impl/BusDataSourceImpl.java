@@ -2,6 +2,7 @@ package cs.edu.busroute.db.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +16,12 @@ import com.google.android.gms.maps.model.LatLng;
 import cs.edu.busroute.db.helper.BusInfoHelper;
 import cs.edu.busroute.db.helper.TableTypeEnum;
 import cs.edu.busroute.db.service.BusDataSource;
+import cs.edu.busroute.model.BusGraph;
 import cs.edu.busroute.model.BusStation;
+import cs.edu.busroute.model.Edge;
+import cs.edu.busroute.model.Station;
+import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
+import edu.uci.ics.jung.graph.Graph;
 
 /**
  * @author HoangNguyen
@@ -52,7 +58,7 @@ public class BusDataSourceImpl implements BusDataSource {
 	 */
 	@Override
 	public List<BusStation> getBusStationById(long id, TableTypeEnum tableType) {
-		List<BusStation> busStations = new ArrayList<BusStation>();
+		List<BusStation> busStations = new LinkedList<BusStation>();
 		String query = "Select * from " + tableType.getTableName()
 				+ " where id = ? ";
 		Cursor cursor = database.rawQuery(query,
@@ -136,5 +142,77 @@ public class BusDataSourceImpl implements BusDataSource {
 			cursor.moveToNext();
 		}
 		return null;
+	}
+
+	private double calculationByDistance(LatLng startPoint, LatLng endPoint) {
+		int Radius = 6371;// radius of earth in Km
+		double dLat = Math.toRadians(endPoint.latitude - startPoint.latitude);
+		double dLon = Math.toRadians(endPoint.longitude - endPoint.longitude);
+		double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+				+ Math.cos(Math.toRadians(startPoint.latitude))
+				* Math.cos(Math.toRadians(endPoint.latitude))
+				* Math.sin(dLon / 2) * Math.sin(dLon / 2);
+		double c = 2 * Math.asin(Math.sqrt(a));
+		return Radius * c;
+	}
+
+	@Override
+	public BusGraph buildGraph() {
+		Map<String, Station> stations = new HashMap<String, Station>();
+		List<Edge> edges = new ArrayList<Edge>();
+		for (int i = 1; i <= 152; i++) {
+			buildGraphInternal(stations, edges, i, TableTypeEnum.FORWARD);
+			buildGraphInternal(stations, edges, i, TableTypeEnum.BACKWARD);
+		}
+		Graph<Station, Edge> graph = new DirectedSparseMultigraph<Station, Edge>();
+		for (Edge edge : edges) {
+			if (stations.get(edge.getSource()) == null
+					|| stations.get(edge.getDestination()) == null) {
+				System.out.print(edge.toString());
+			}
+			graph.addEdge(edge, stations.get(edge.getSource()),
+					stations.get(edge.getDestination()));
+		}
+		return new BusGraph(stations, edges, graph);
+	}
+
+	private void buildGraphInternal(Map<String, Station> stations,
+			List<Edge> edges, int i, TableTypeEnum tableType) {
+		List<BusStation> busStations = getBusStationById(i, tableType);
+		if (!busStations.isEmpty()) {
+			for (int j = 0; j < busStations.size() - 1; j++) {
+				BusStation busSource = busStations.get(j);
+				Station stationSrc = new Station();
+				stationSrc.setDescription(busSource.getDescription());
+				stationSrc.setStationGPS(busSource.getStationGPS());
+				stationSrc.getIds().add(busSource.getId());
+
+				addStation(stations, busSource, stationSrc);
+
+				BusStation busDest = busStations.get(j + 1);
+				Station stationDest = new Station();
+				stationDest.setDescription(busDest.getDescription());
+				stationDest.setStationGPS(busDest.getStationGPS());
+				stationDest.getIds().add(busDest.getId());
+				if (j == (busStations.size() - 2)) {
+					addStation(stations, busDest, stationDest);
+				}
+				double weight = calculationByDistance(
+						stationSrc.getStationGPS(), stationDest.getStationGPS());
+				edges.add(new Edge(stationSrc.getDescription(), stationDest
+						.getDescription(), weight));
+			}
+		}
+	}
+
+	private void addStation(Map<String, Station> stations,
+			BusStation busSource, Station stationSrc) {
+
+		if (stations.get(stationSrc.getDescription()) == null) {
+			stations.put(stationSrc.getDescription(), stationSrc);
+		} else {
+			stations.get(stationSrc.getDescription()).getIds()
+					.add(busSource.getId());
+		}
 	}
 }

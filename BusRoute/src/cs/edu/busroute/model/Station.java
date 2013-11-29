@@ -1,5 +1,8 @@
 package cs.edu.busroute.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.google.android.gms.maps.model.LatLng;
 
 /**
@@ -11,9 +14,14 @@ public class Station {
 
 	private LatLng stationGPS;
 	private String description;
+	private final Set<Long> ids = new HashSet<Long>();
 
 	public String getDescription() {
 		return description;
+	}
+
+	public Set<Long> getIds() {
+		return ids;
 	}
 
 	public LatLng getStationGPS() {
@@ -60,6 +68,7 @@ public class Station {
 		int result = 1;
 		result = prime * result + stationGPS.hashCode();
 		result = prime * result + description.hashCode();
+		result = prime * result + ids.hashCode();
 		return result;
 	}
 }

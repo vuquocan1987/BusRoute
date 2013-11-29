@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Window;
+import cs.edu.busroute.db.service.impl.GraphBuilder;
 
 public class LoadingActivity extends AbstractDataSourceActivity {
 
@@ -12,7 +13,7 @@ public class LoadingActivity extends AbstractDataSourceActivity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_loading);
-		getDataSource(); // copy database at the first run
+		GraphBuilder.setBusGraph(getDataSource().buildGraph()); // run
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -21,7 +22,7 @@ public class LoadingActivity extends AbstractDataSourceActivity {
 				startActivity(mainIntent);
 				finish();
 			}
-		}, 3000);
+		}, 2000);
 
 	}
 

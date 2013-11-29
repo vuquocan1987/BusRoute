@@ -9,6 +9,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import cs.edu.busroute.db.helper.TableTypeEnum;
 import cs.edu.busroute.model.BusStation;
+import cs.edu.busroute.model.BusGraph;
 
 public interface BusDataSource {
 	public void open() throws SQLException;
@@ -23,4 +24,6 @@ public interface BusDataSource {
 			TableTypeEnum tableType);
 
 	public Map<String, LatLng> getAllStation();
+
+	public BusGraph buildGraph();
 }

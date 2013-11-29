@@ -30,8 +30,11 @@ public class MapActivity extends Activity implements LocationListener,
 		try {
 			initilizeMap();
 			googleMap.setMyLocationEnabled(true);
+			googleMap.setIndoorEnabled(true);
+			googleMap.getUiSettings().setZoomControlsEnabled(true);
 			googleMap.getUiSettings().setMyLocationButtonEnabled(true);
 			googleMap.getUiSettings().setCompassEnabled(true);
+			googleMap.getUiSettings().setAllGesturesEnabled(true);
 			mLocationClient = new LocationClient(this, this, this);
 
 		} catch (Exception e) {
