@@ -8,18 +8,19 @@ import java.util.Map;
 import org.apache.commons.collections15.Transformer;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.CancelableCallback;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -35,6 +36,8 @@ public class BusRouteActivity extends Activity implements
 	private Map<String, Station> mapStation;
 	LatLng startPosition;
 	LatLng destinationPosition;
+	List<Edge> edges;
+	StringBuilder routeInfo;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +64,10 @@ public class BusRouteActivity extends Activity implements
 			DijkstraShortestPath<Station, Edge> alg = new DijkstraShortestPath<Station, Edge>(
 					GraphBuilder.getBusGraph().getGraph(), wtTransformer);
 			mapStation = GraphBuilder.getBusGraph().getMapStation();
-			List<Edge> l = alg.getPath(mapStation.get(src.getDescription()),
+			edges = alg.getPath(mapStation.get(src.getDescription()),
 					mapStation.get(dest.getDescription()));
 
-			showBusRouteByEdge(l);
+			showBusRouteByEdge();
 			addMarker(source);
 			addMarker(target);
 
@@ -79,16 +82,22 @@ public class BusRouteActivity extends Activity implements
 		}
 	}
 
-	private void showBusRouteByEdge(List<Edge> edges) {
+	private void showBusRouteByEdge() {
+		routeInfo = new StringBuilder();
 		for (Edge edge : edges) {
+
+			routeInfo.append(
+					"From Station[" + edge.getSource() + "] to Station["
+							+ edge.getDestination() + "]: "
+							+ edge.printListBusId()).append("\n");
 
 			List<Station> stations = new ArrayList<Station>();
 			stations.add(mapStation.get(edge.getSource()));
 			stations.add(mapStation.get(edge.getDestination()));
 			showBusRoute(stations);
 
-			// addMarkerFromStation(mapStation.get(edge.getSource()));
-			// addMarkerFromStation(mapStation.get(edge.getDestination()));
+			addMarkerFromStation(mapStation.get(edge.getSource()));
+			addMarkerFromStation(mapStation.get(edge.getDestination()));
 
 			/*
 			 * new GetRouteListTask(BusRouteActivity.this, mapStation.get(
@@ -96,6 +105,7 @@ public class BusRouteActivity extends Activity implements
 			 * edge.getDestination()).getStationGPS(),
 			 * GMapV2Direction.MODE_DRIVING, this).execute();
 			 */
+
 		}
 	}
 
@@ -160,55 +170,72 @@ public class BusRouteActivity extends Activity implements
 			}
 			googleMap.addPolyline(rectLine);
 
-			CameraPosition mCPFrom = new CameraPosition.Builder()
-					.target(startPosition).zoom(14).bearing(0).tilt(25).build();
-			final CameraPosition mCPTo = new CameraPosition.Builder()
-					.target(destinationPosition).zoom(14).bearing(0).tilt(50)
-					.build();
-
-			changeCamera(CameraUpdateFactory.newCameraPosition(mCPFrom),
-					new CancelableCallback() {
-						@Override
-						public void onFinish() {
-							changeCamera(CameraUpdateFactory
-									.newCameraPosition(mCPTo),
-									new CancelableCallback() {
-
-										@Override
-										public void onFinish() {
-
-											LatLngBounds bounds = new LatLngBounds.Builder()
-													.include(startPosition)
-													.include(
-															destinationPosition)
-													.build();
-											changeCamera(
-													CameraUpdateFactory
-															.newLatLngBounds(
-																	bounds, 50),
-													null, false);
-										}
-
-										@Override
-										public void onCancel() {
-										}
-									}, false);
-						}
-
-						@Override
-						public void onCancel() {
-						}
-					}, true);
+			/*
+			 * CameraPosition mCPFrom = new CameraPosition.Builder()
+			 * .target(startPosition).zoom(14).bearing(0).tilt(25).build();
+			 * final CameraPosition mCPTo = new CameraPosition.Builder()
+			 * .target(destinationPosition).zoom(14).bearing(0).tilt(50)
+			 * .build();
+			 * 
+			 * changeCamera(CameraUpdateFactory.newCameraPosition(mCPFrom), new
+			 * CancelableCallback() {
+			 * 
+			 * @Override public void onFinish() {
+			 * changeCamera(CameraUpdateFactory .newCameraPosition(mCPTo), new
+			 * CancelableCallback() {
+			 * 
+			 * @Override public void onFinish() {
+			 * 
+			 * LatLngBounds bounds = new LatLngBounds.Builder()
+			 * .include(startPosition) .include( destinationPosition) .build();
+			 * changeCamera( CameraUpdateFactory .newLatLngBounds( bounds, 50),
+			 * null, false); }
+			 * 
+			 * @Override public void onCancel() { } }, false); }
+			 * 
+			 * @Override public void onCancel() { } }, true);
+			 */
 		}
 	}
 
-	private void changeCamera(CameraUpdate update, CancelableCallback callback,
-			boolean instant) {
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
 
-		if (instant) {
-			googleMap.animateCamera(update, 1, callback);
-		} else {
-			googleMap.animateCamera(update, 4000, callback);
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle presses on the action bar items
+		switch (item.getItemId()) {
+		case R.id.menuDetail:
+			openDialogInformation();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
+
+	private void openDialogInformation() {
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+		// set title
+		alertDialogBuilder.setTitle("Route Information");
+		// set dialog message
+		alertDialogBuilder.setMessage(routeInfo.toString())
+				.setCancelable(false)
+				.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+					}
+				});
+
+		// create alert dialog
+		AlertDialog alertDialog = alertDialogBuilder.create();
+
+		// show it
+		alertDialog.show();
+	}
+
 }

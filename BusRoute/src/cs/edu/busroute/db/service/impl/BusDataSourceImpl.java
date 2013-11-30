@@ -199,8 +199,18 @@ public class BusDataSourceImpl implements BusDataSource {
 				}
 				double weight = calculationByDistance(
 						stationSrc.getStationGPS(), stationDest.getStationGPS());
-				edges.add(new Edge(stationSrc.getDescription(), stationDest
-						.getDescription(), weight));
+				Edge edge = new Edge(stationSrc.getDescription(),
+						stationDest.getDescription(), weight);
+				if (!edges.contains(edge)) {
+					edge.getIds().add(Long.valueOf(i));
+					edges.add(edge);
+				} else {
+					for (Edge e : edges) {
+						if (e.equals(edge)) {
+							e.getIds().add(Long.valueOf(i));
+						}
+					}
+				}
 			}
 		}
 	}

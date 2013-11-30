@@ -18,10 +18,11 @@
 
         <AutoCompleteTextView
             android:id="@+id/txt_startPoint"
+            android:singleLine="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10"
+            android:ems="50"
             android:hint="start point" >
 
             <requestFocus />
@@ -49,10 +50,11 @@
 
         <AutoCompleteTextView
             android:id="@+id/txt_endPoint"
+            android:singleLine="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="10"
+            android:ems="50"
             android:hint="end point" />
 
         <Button

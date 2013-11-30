@@ -12,7 +12,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -77,7 +76,6 @@ public class MainActivity extends AbstractDataSourceActivity {
 			intent.putExtra("source", source);
 			intent.putExtra("target", target);
 			startActivity(intent);
-			finish();
 		}
 	}
 
@@ -176,13 +174,6 @@ public class MainActivity extends AbstractDataSourceActivity {
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			return mDialog;
 		}
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
 	}
 
 }
